@@ -16,24 +16,24 @@ fun main() {
         }
     }
 
-    fun addToQueues(stacks: Array<Stack<Char>>, line: String): Boolean {
+    fun addToQueues(piles: Array<LinkedList<Char>>, line: String): Boolean {
         if (line.contains("move")) {
             return false
         }
 
         val findings = charRegex.findAll(line)
         for (find in findings) {
-            stacks[find.range.first/columnWidth].add(line[find.range.first])
+            piles[find.range.first/columnWidth].addLast(line[find.range.first])
         }
 
         return true
     }
 
-    fun move(stacks: Array<Stack<Char>>, line: String) {
+    fun move(piles: Array<LinkedList<Char>>, line: String) {
         val findings = numberRegex.findAll(line)
         val direction = Direction(findings.map { it.value }.toList())
         for (i in 1..direction.amount) {
-            stacks[direction.to-1].add(stacks[direction.from-1].pop())
+            piles[direction.to-1].addFirst(piles[direction.from-1].pop())
         }
     }
 
@@ -48,19 +48,19 @@ fun main() {
             }
         }
 
-        val stacks = Array<Stack<Char>>(queuesNumber) { Stack() }
+        val piles = Array<LinkedList<Char>>(queuesNumber) { LinkedList() }
 
         for (line in input) {
             if (isMapping) {
-                isMapping = addToQueues(stacks, line)
+                isMapping = addToQueues(piles, line)
             }
 
             if (!isMapping) {
-                move(stacks, line)
+                move(piles, line)
             }
         }
 
-        return stacks.map { it.pop() }.toString()
+        return piles.fold ("") { acc, it -> acc + it.pop().toString() }
     }
 
     // test if implementation meets criteria from the description, like:
