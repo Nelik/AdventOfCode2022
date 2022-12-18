@@ -37,7 +37,17 @@ fun main() {
         }
     }
 
-    fun part1(input: List<String>): String {
+    fun move2(piles: Array<LinkedList<Char>>, line: String) {
+        val findings = numberRegex.findAll(line)
+        val direction = Direction(findings.map { it.value }.toList())
+        val toBeMoved = piles[direction.from-1].subList(0, direction.amount)
+        piles[direction.to-1].addAll(0, toBeMoved)
+        for (i in 0 until direction.amount) {
+            piles[direction.from-1].pop()
+        }
+    }
+
+    fun moveCranes(input: List<String>, isPart2: Boolean = false): String {
         var isMapping = true
         var queuesNumber = 0
         for (line in input) {
@@ -55,8 +65,10 @@ fun main() {
                 isMapping = addToQueues(piles, line)
             }
 
-            if (!isMapping) {
+            if (!isMapping && !isPart2) {
                 move(piles, line)
+            } else if (!isMapping) {
+                move2(piles, line)
             }
         }
 
@@ -65,10 +77,10 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day05_test")
-    check(part1(testInput) == "CMZ")
-//    check(part2(testInput) == 4)
+    check(moveCranes(testInput) == "CMZ")
+    check(moveCranes(testInput, true) == "MCD")
 
     val input = readInput("Day05")
-    part1(input).println()
-//    part2(input).println()
+    moveCranes(input).println()
+    moveCranes(input, true).println()
 }
