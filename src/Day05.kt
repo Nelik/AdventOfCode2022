@@ -43,7 +43,7 @@ fun main() {
         val toBeMoved = piles[direction.from-1].subList(0, direction.amount)
         piles[direction.to-1].addAll(0, toBeMoved)
         for (i in 0 until direction.amount) {
-            piles[direction.from-1].pop()
+            piles[direction.from-1].removeAll(toBeMoved.toSet())
         }
     }
 
