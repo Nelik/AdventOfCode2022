@@ -1,12 +1,9 @@
-import java.util.LinkedList
-import java.util.Queue
 import kotlin.math.abs
 
 fun main() {
 
     fun countStrength(input: List<String>): Int {
-        val checkPoints: Queue<Int> = LinkedList(listOf(20, 60, 100, 140, 180, 220))
-        var nextCheck = checkPoints.poll()
+        var nextCheck = 20
         var stepCount = 0
         var strength = 0
         var value = 1
@@ -14,9 +11,10 @@ fun main() {
             val cmd = line.split(" ")
             if (nextCheck - stepCount <= 2) {
                 strength += value*nextCheck
-                nextCheck = checkPoints.poll()
-                if (nextCheck == null) return strength
+                nextCheck += 40
+                if (nextCheck > 220) return strength
             }
+
             if (cmd.first() == "noop") {
                 stepCount++
             } else {
@@ -54,7 +52,12 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day10_test")
-    val testOutput = "##..##..##..##..##..##..##..##..##..##..\n###...###...###...###...###...###...###.\n####....####....####....####....####....\n#####.....#####.....#####.....#####.....\n######......######......######......####\n#######.......#######.......#######....."
+    val testOutput = listOf("##..##..##..##..##..##..##..##..##..##..",
+    "###...###...###...###...###...###...###.",
+    "####....####....####....####....####....",
+    "#####.....#####.....#####.....#####.....",
+    "######......######......######......####",
+    "#######.......#######.......#######.....").joinToString("\n")
     check(countStrength(testInput) == 13140)
     check(render(testInput) == testOutput)
 
